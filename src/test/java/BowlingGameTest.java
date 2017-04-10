@@ -5,9 +5,6 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-/**
- * Created by tomasmalmsten on 2017-03-21.
- */
 public class BowlingGameTest {
 
     private BowlingGame underTest;
