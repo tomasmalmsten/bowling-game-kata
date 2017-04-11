@@ -15,7 +15,8 @@ public class BowlingGameTest {
     }
 
     @Test
-    public void completeFailure_GivesZeroResults() {
+    public void completeFailure_GivesZeroAsResults() {
+
         assertThat(underTest.getTotalScore(), is(0));
     }
 
@@ -28,32 +29,31 @@ public class BowlingGameTest {
     }
 
     @Test
-    public void firstRoll_fillsFirstFrame() {
-        underTest.registerRoll(1);
-        assertThat(underTest.currentFrame(), is(1));
-    }
-
-    @Test
-    public void firstRollIsAStrike_movesToSecondFrame() {
+    public void whenFrameIsStrike_nextFrameDefinesScore() {
         underTest.registerRoll(10);
-        assertThat(underTest.currentFrame(), is(2));
-    }
-
-    @Test
-    public void twoRolls_movesToSecondFrame() {
         underTest.registerRoll(1);
         underTest.registerRoll(1);
-        assertThat(underTest.currentFrame(), is(2));
+        assertThat(underTest.getTotalScore(), is(14));
     }
 
-
-    /*
     @Test
     public void allStrikes_Gives300() {
-        BowlingGame underTest = new BowlingGame();
-        underTest.addScore();
+
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+
         int totalScore = underTest.getTotalScore();
         assertThat(totalScore, is(300));
     }
-    */
+
 }

@@ -1,34 +1,57 @@
-public class BowlingGame {
-    private int totalScore = 0;
-    private int currentFrame = 1;
-    private short currentRollInFrame = 0;
+import java.util.LinkedList;
 
-    public int getTotalScore() {
-        return totalScore;
-    }
+class BowlingGame {
+    private LinkedList<Frame> frames = new LinkedList<Frame>();
+    private Frame current = new Frame();
 
-    public void registerRoll(int score) {
-        addScoreForRoll(score);
-        currentRollInFrame++;
 
-        if (score == 10) {
-            goToNextFrame();
+    int getTotalScore() {
+        int score = 0;
+        for (int i = 0; i < frames.size(); i++) {
+            Frame f = frames.get(i);
+            score += f.getScore();
+            if (f.isStrike()) {
+                if (frames.size() > i + 1) {
+                    Frame nextFrame = frames.get(i + 1);
+                    score += nextFrame.getScore();
+                }
+            }
         }
-        if (currentRollInFrame == 2) {
-            goToNextFrame();
+        return score;
+    }
+
+    void registerRoll(int score) {
+        current.addScore(score);
+
+        if (current.completed()) {
+            frames.add(current);
+            current = new Frame();
+        }
+
+    }
+
+    private class Frame {
+        private int rollInFrame = 0;
+        private int score;
+
+        void addScore(int score) {
+            this.score += score;
+            rollInFrame++;
+        }
+
+        boolean isSpare() {
+            return score == 10 && rollInFrame == 2;
+        }
+
+        boolean isStrike() {
+            return score == 10 && rollInFrame == 1;
+        }
+        boolean completed() {
+            return isSpare() || isStrike() || rollInFrame == 2;
+        }
+        int getScore() {
+            return score;
         }
     }
 
-    private void goToNextFrame() {
-        currentRollInFrame = 0;
-        currentFrame++;
-    }
-
-    private void addScoreForRoll(int score) {
-        totalScore += score;
-    }
-
-    public int currentFrame() {
-        return currentFrame;
-    }
 }
