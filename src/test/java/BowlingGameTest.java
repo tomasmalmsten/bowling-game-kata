@@ -37,17 +37,79 @@ public class BowlingGameTest {
     }
 
     @Test
-    public void allStrikes_Gives300() {
+    public void allStrikesButLast_Gives270PlusTwoLastRoles() {
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(5);
+        underTest.registerRoll(4);
+
+        int totalScore = underTest.getTotalScore();
+        assertThat(totalScore, is(263));
+    }
+
+    @Test
+    public void allSparesButLast_givesSomething() {
+        underTest.registerRoll(5);
+        underTest.registerRoll(5);
+
+        underTest.registerRoll(5);
+        underTest.registerRoll(5);
+
+        underTest.registerRoll(5);
+        underTest.registerRoll(5);
+
+        underTest.registerRoll(5);
+        underTest.registerRoll(5);
+
+        underTest.registerRoll(5);
+        underTest.registerRoll(5);
+
+        underTest.registerRoll(5);
+        underTest.registerRoll(5);
+
+        underTest.registerRoll(5);
+        underTest.registerRoll(5);
+
+        underTest.registerRoll(5);
+        underTest.registerRoll(5);
+
+        underTest.registerRoll(5);
+        underTest.registerRoll(5);
+
+        underTest.registerRoll(4);
+        underTest.registerRoll(4);
+
+        int totalScore = underTest.getTotalScore();
+        assertThat(totalScore, is(142));
+    }
+
+    @Test
+    public void allStrikes() {
+        underTest.registerRoll(10);
 
         underTest.registerRoll(10);
+
         underTest.registerRoll(10);
+
         underTest.registerRoll(10);
+
         underTest.registerRoll(10);
+
         underTest.registerRoll(10);
+
         underTest.registerRoll(10);
+
         underTest.registerRoll(10);
+
         underTest.registerRoll(10);
-        underTest.registerRoll(10);
+
         underTest.registerRoll(10);
         underTest.registerRoll(10);
         underTest.registerRoll(10);

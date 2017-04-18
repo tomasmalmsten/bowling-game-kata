@@ -7,51 +7,64 @@ class BowlingGame {
 
     int getTotalScore() {
         int score = 0;
-        for (int i = 0; i < frames.size(); i++) {
-            Frame f = frames.get(i);
+        for (Frame f : frames) {
             score += f.getScore();
-            if (f.isStrike()) {
-                if (frames.size() > i + 1) {
-                    Frame nextFrame = frames.get(i + 1);
-                    score += nextFrame.getScore();
-                }
-            }
         }
         return score;
     }
 
     void registerRoll(int score) {
-        current.addScore(score);
-
+        current.knockDown(score);
         if (current.completed()) {
+            Frame newFrame = new Frame();
+            current.nextFrame = newFrame;
             frames.add(current);
-            current = new Frame();
+            current = newFrame;
         }
 
     }
 
     private class Frame {
-        private int rollInFrame = 0;
-        private int score;
+        private boolean firstRoll = true;
+        private boolean completed = false;
+        private int pinsInRollOne;
+        private int pinsInRollTwo;
+        private Frame nextFrame;
 
-        void addScore(int score) {
-            this.score += score;
-            rollInFrame++;
+        void knockDown(int pins) {
+            if (firstRoll) {
+                pinsInRollOne = pins;
+                firstRoll = false;
+                return;
+            }
+            pinsInRollTwo = pins;
+            completed = true;
+        }
+
+        int getScore() {
+            if (isStrike()) {
+                if (nextFrame.isStrike()) {
+                    return pinsInRollOne + nextFrame.pinsInRollOne + nextFrame.nextFrame.pinsInRollOne;
+                }
+                return pinsInRollOne + nextFrame.pinsInRollOne + nextFrame.pinsInRollTwo;
+            }
+            if (isSpare()) {
+                return pinsInRollOne + pinsInRollTwo + nextFrame.pinsInRollOne;
+            }
+            return pinsInRollOne + pinsInRollTwo;
         }
 
         boolean isSpare() {
-            return score == 10 && rollInFrame == 2;
+            return pinsInRollOne + pinsInRollTwo == 10;
         }
 
         boolean isStrike() {
-            return score == 10 && rollInFrame == 1;
+            return pinsInRollOne == 10;
         }
         boolean completed() {
-            return isSpare() || isStrike() || rollInFrame == 2;
+            return isSpare() || isStrike() || completed;
         }
-        int getScore() {
-            return score;
-        }
+
     }
 
 }
