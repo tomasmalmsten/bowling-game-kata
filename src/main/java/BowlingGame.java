@@ -4,6 +4,9 @@ class BowlingGame {
     private LinkedList<Frame> frames = new LinkedList<Frame>();
     private Frame current = new Frame();
 
+    int getFrameCount() {
+        return frames.size();
+    }
 
     int getTotalScore() {
         int score = 0;
@@ -16,19 +19,24 @@ class BowlingGame {
     void registerRoll(int score) {
         current.knockDown(score);
         if (current.completed()) {
-            Frame newFrame = new Frame();
-            current.nextFrame = newFrame;
+            Frame newFrame;
             frames.add(current);
+            if (frames.size() != 9) {
+                newFrame = new Frame();
+            } else {
+                newFrame = new LastFrame();
+                frames.add(newFrame);
+            }
+            current.nextFrame = newFrame;
             current = newFrame;
         }
-
     }
 
     private class Frame {
         private boolean firstRoll = true;
         private boolean completed = false;
-        private int pinsInRollOne;
-        private int pinsInRollTwo;
+        protected int pinsInRollOne;
+        protected int pinsInRollTwo;
         private Frame nextFrame;
 
         void knockDown(int pins) {
@@ -43,13 +51,19 @@ class BowlingGame {
 
         int getScore() {
             if (isStrike()) {
-                if (nextFrame.isStrike()) {
-                    return pinsInRollOne + nextFrame.pinsInRollOne + nextFrame.nextFrame.pinsInRollOne;
+                if (nextFrame.isStrike() && nextFrame.nextFrame != null) {
+                    return pinsInRollOne
+                            + nextFrame.pinsInRollOne
+                            + nextFrame.nextFrame.pinsInRollOne;
                 }
-                return pinsInRollOne + nextFrame.pinsInRollOne + nextFrame.pinsInRollTwo;
+                return pinsInRollOne
+                        + nextFrame.pinsInRollOne
+                        + nextFrame.pinsInRollTwo;
             }
-            if (isSpare()) {
-                return pinsInRollOne + pinsInRollTwo + nextFrame.pinsInRollOne;
+            if (isSpare() && nextFrame != null) {
+                return pinsInRollOne
+                        + pinsInRollTwo
+                        + nextFrame.pinsInRollOne;
             }
             return pinsInRollOne + pinsInRollTwo;
         }
@@ -61,10 +75,42 @@ class BowlingGame {
         boolean isStrike() {
             return pinsInRollOne == 10;
         }
+
         boolean completed() {
             return isSpare() || isStrike() || completed;
         }
 
     }
+
+    class LastFrame extends Frame {
+        private int pinsInRollThree;
+        private boolean firstRoll = true;
+        private boolean secondRoll = false;
+
+        @Override
+        boolean completed() {
+            return false;
+        }
+
+        @Override
+        void knockDown(int pins) {
+            if (firstRoll) {
+                pinsInRollOne = pins;
+                firstRoll = false;
+                secondRoll = true;
+            } else if (secondRoll) {
+                pinsInRollTwo = pins;
+                secondRoll = false;
+            } else {
+                pinsInRollThree = pins;
+            }
+        }
+
+        @Override
+        int getScore() {
+            return pinsInRollOne + pinsInRollTwo + pinsInRollThree;
+        }
+    }
+
 
 }

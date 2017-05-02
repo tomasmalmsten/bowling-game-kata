@@ -88,6 +88,35 @@ public class BowlingGameTest {
 
         int totalScore = underTest.getTotalScore();
         assertThat(totalScore, is(142));
+        assertThat(underTest.getFrameCount(), is(10));
+    }
+
+    @Test
+    public void allStrikes_createsTenFrames() {
+        underTest.registerRoll(10);
+
+        underTest.registerRoll(10);
+
+        underTest.registerRoll(10);
+
+        underTest.registerRoll(10);
+
+        underTest.registerRoll(10);
+
+        underTest.registerRoll(10);
+
+        underTest.registerRoll(10);
+
+        underTest.registerRoll(10);
+
+        underTest.registerRoll(10);
+
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+        underTest.registerRoll(10);
+
+        assertThat(underTest.getFrameCount(), is(10));
+
     }
 
     @Test
